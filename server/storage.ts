@@ -1,38 +1,37 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import {
+  metrics,
+  activities,
+  type Metric,
+  type Activity,
+} from "@shared/schema";
+import { desc } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getMetrics(): Promise<Metric[]>;
+  getRecentActivities(limit?: number): Promise<Activity[]>;
+  createMetric(metric: Omit<Metric, "id">): Promise<Metric>;
+  createActivity(activity: Omit<Activity, "id" | "time">): Promise<Activity>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getMetrics(): Promise<Metric[]> {
+    return await db.select().from(metrics);
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async getRecentActivities(limit: number = 10): Promise<Activity[]> {
+    return await db.select().from(activities).orderBy(desc(activities.time)).limit(limit);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async createMetric(metric: Omit<Metric, "id">): Promise<Metric> {
+    const [newMetric] = await db.insert(metrics).values(metric).returning();
+    return newMetric;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async createActivity(activity: Omit<Activity, "id" | "time">): Promise<Activity> {
+    const [newActivity] = await db.insert(activities).values(activity).returning();
+    return newActivity;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();

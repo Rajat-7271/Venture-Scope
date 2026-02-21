@@ -1,103 +1,98 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { serveStatic } from "./static";
-import { createServer } from "http";
+    import axios from "axios";
+    import express from "express";
+    import { createServer } from "http";
+    import { setupVite } from "./vite";
 
-const app = express();
-const httpServer = createServer(app);
+    const app = express();
+    const server = createServer(app);
 
-declare module "http" {
-  interface IncomingMessage {
-    rawBody: unknown;
-  }
-}
+    app.use(express.json());
 
-app.use(
-  express.json({
-    verify: (req, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
+    app.post("/api/enrich", async (req, res) => {
+      try {
+        const { name, website } = req.body || {};
 
-app.use(express.urlencoded({ extended: false }));
+        // ✅ Validate input
+        if (!name) {
+          return res.status(400).json({ error: "Company name missing" });
+        }
 
-export function log(message: string, source = "express") {
-  const formattedTime = new Date().toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-  });
+        // ✅ SAFE website handling
+        const safeWebsite =
+          typeof website === "string" && website.trim() !== ""
+            ? website.startsWith("http")
+              ? website
+              : `https://${website}`
+            : `https://${name.toLowerCase().replace(/\s+/g, "")}.com`;
 
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
+        // ✅ Live website fetch
+        let pageText = "";
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
+        try {
+          const response = await axios.get(safeWebsite, {
+            timeout: 5000,
+          });
 
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
+          pageText = response.data;
+        } catch (err) {
+          console.warn("⚠ Website fetch failed, fallback to mock");
+        }
 
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        // ✅ Enrichment response
+        const enrichment = {
+          summary: pageText
+            ? `${name} website successfully fetched for enrichment.`
+            : `${name} is a fast-growing company operating in the tech space.`,
+
+          whatTheyDo: [
+            "Live website data pull attempted",
+            pageText ? "Real content fetched" : "Fallback mock used",
+            "Structured enrichment generated",
+          ],
+
+          keywords: ["Live Data", "Enrichment", "AI Scout", "VC Intelligence"],
+
+          signals: [
+            {
+              text: pageText ? "Website reachable" : "Website fetch failed",
+              date: "Live Check",
+            },
+            {
+              text: "Enrichment generated server-side",
+              date: "System",
+            },
+          ],
+
+          score: pageText ? 85 : 70,
+          risk: pageText ? "Lower" : "Medium",
+          verdict: pageText
+            ? "Validated via Live Pull"
+            : "Mock Fallback",
+
+          timestamp: new Date().toLocaleString(),
+
+          sources: [{ label: "Homepage", url: safeWebsite }],
+        };
+
+        // ✅ Send response
+        res.json(enrichment);
+
+      } catch (error) {
+        console.error("❌ ENRICH ERROR:", error);
+        res.status(500).json({ error: "Enrichment failed" });
       }
+    });
 
-      log(logLine);
-    }
-  });
+    // ✅ Start server (OUTSIDE route)
+    async function start() {
+      console.log("Setting up Vite...");
+      await setupVite(server, app);
 
-  next();
-});
+      const PORT = process.env.PORT || 5000;
 
-(async () => {
-  await registerRoutes(httpServer, app);
-
-  app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    console.error("Internal Server Error:", err);
-
-    if (res.headersSent) {
-      return next(err);
+      server.listen(PORT, () => {
+        console.log(`✅ Server running on port ${PORT}`);
+      });
     }
 
-    return res.status(status).json({ message });
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (process.env.NODE_ENV === "production") {
-    serveStatic(app);
-  } else {
-    const { setupVite } = await import("./vite");
-    await setupVite(httpServer, app);
-  }
-
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || "5000", 10);
-  httpServer.listen(
-    {
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    },
-    () => {
-      log(`serving on port ${port}`);
-    },
-  );
-})();
+    start();

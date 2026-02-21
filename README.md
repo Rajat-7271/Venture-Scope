@@ -84,8 +84,8 @@ Persistence:
 
 1️⃣ Clone Repository
 
-git clone https://github.com/YOUR_USERNAME/venturescope.git  
-cd venturescope
+git clone https://github.com/Rajat-7271/Venture-Scope.git
+cd Venture-Scope
 
 2️⃣ Install Dependencies
 

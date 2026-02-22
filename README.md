@@ -1,146 +1,145 @@
-# 🚀 VentureScope – VC Discovery & Intelligence Interface
+🚀 VentureScope – VC Discovery & Intelligence Interface
 
-![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?logo=typescript)
-![Vite](https://img.shields.io/badge/Build-Vite-646CFF?logo=vite)
-![Express](https://img.shields.io/badge/Backend-Express-black?logo=express)
-![Node.js](https://img.shields.io/badge/Runtime-Node.js-339933?logo=node.js)
-![Status](https://img.shields.io/badge/Status-MVP-success)
-![License](https://img.shields.io/badge/License-Educational-lightgrey)
+🌐 Live Demo: https://venture-scope-one.vercel.app/
 
----
+------------------------------------------------------------------------
 
-## 🧭 Overview
+🧭 Overview
 
-**VentureScope** is a VC-style company discovery and intelligence interface built to simulate real venture workflows:
+VentureScope is a venture capital-style company discovery and
+intelligence interface designed to simulate real VC sourcing workflows:
 
-🔎 Discover → ⭐ Save → 📂 Organize → 🧠 Enrich → 📊 Evaluate
+Discover → Save → Organize → Enrich → Evaluate
 
----
+The application focuses on workflow clarity, usability, and safe
+integration of live website enrichment via server-side APIs.
 
-## ✨ Features
+------------------------------------------------------------------------
 
-✅ Company Discovery Table  
-✅ Search & Filters (Industry / Stage)  
-✅ Sorting (Name / Stage)  
-✅ Pagination  
-✅ Save Companies  
-✅ Saved View  
-✅ List Management  
-✅ CSV / JSON Export  
-✅ Research Notes Workspace  
-✅ Server-side Enrichment  
-✅ Live Website Data Pull  
-✅ Investment Score & Signals  
-✅ Dark / Light Theme  
+✨ Features
 
----
 
-## 🧠 Enrichment Engine
+• Company discovery dashboard
 
-Triggered from UI → calls:
+• Global search & faceted filters (Industry / Stage)
 
-POST /api/enrich
+• Sorting & pagination
 
-### ⚙️ Server Responsibilities
+• Company profile pages
 
-✔ Input validation  
-✔ Website normalization  
-✔ Live website fetch attempt  
-✔ Structured intelligence response  
+• Research notes workspace
 
-### 📤 Returns
+• Save companies
 
-• Summary  
-• What they do  
-• Keywords  
-• Signals  
-• Investment Score  
-• Risk  
-• Verdict  
-• Sources  
-• Timestamp  
+• List management (create / add / remove)
 
----
+• CSV / JSON export
 
-## 🛠 Tech Stack
+• Saved searches
 
-Frontend:
-- React
-- TypeScript
-- Vite
+• Live website enrichment
 
-Backend:
-- Node.js
-- Express
-- Axios
+• Investment score & signals
 
-Persistence:
-- LocalStorage
+• Dark / Light theme
 
----
+• Responsive layout
 
-## ⚙️ Local Setup
+------------------------------------------------------------------------
 
-1️⃣ Clone Repository
+🧠 Enrichment Engine
 
-git clone https://github.com/Rajat-7271/Venture-Scope.git
+Endpoint: POST /api/enrich
 
-cd Venture-Scope
+Server Responsibilities:
 
-2️⃣ Install Dependencies
+✔ Input validation
 
-npm install
+✔ Website normalization
 
-3️⃣ Run Development Server
+✔ Live website fetch
 
-npm run dev
+✔ Structured intelligence extraction
+
+
+Response Includes: 
+
+• Summary
+
+• What they do
+
+• Keywords
+
+• Signals
+
+• Investment Score
+
+• Risk & Verdict
+
+• Sources
+
+• Timestamp
+
+------------------------------------------------------------------------
+
+🛠 Tech Stack
+
+Frontend: - React - TypeScript - Vite - CSS
+
+Backend: - Node.js - Express - Axios
+
+Persistence: - LocalStorage
+
+------------------------------------------------------------------------
+
+⚙️ Local Setup
+
+1.  Clone repository
+2.  Install dependencies → npm install
+3.  Run development server → npm run dev
 
 Runs on:
 
-Frontend → http://localhost:5173  
-Backend → http://localhost:5000  
+Frontend → http://localhost:5173
 
----
+Backend → http://localhost:5000
 
-## 🌍 API Endpoint
+------------------------------------------------------------------------
+
+🌍 API Endpoint
 
 POST /api/enrich
 
-Request Body:
+Request Body: { “name”: “Company Name”, “website”: “company.com” }
 
-{
-  "name": "Company Name",
-  "website": "company.com"
-}
+------------------------------------------------------------------------
 
----
+📦 Data
 
-## 📦 Data
+✔ Seeded using mock company dataset
 
-✔ Seeded using mock company JSON dataset  
-✔ Live enrichment from public websites on demand  
+✔ Live enrichment from public websites on demand
 
----
+------------------------------------------------------------------------
 
-## 🎯 Assignment Context
+🎯 Assignment Context
 
 Built as part of a VC Discovery & Intelligence Interface Assignment.
 
-Focus Areas:
+Focus Areas: 
 
-• Usable VC workflow  
-• Server-side enrichment  
-• Safe API design  
-• Live data pull  
-• Clean UI/UX  
+• Realistic VC workflow design
 
----
+• Server-side enrichment integration
 
-## 👨‍💻 Author
+• Safe API architecture
+
+• Live data pull
+
+• Clean UI/UX
+
+------------------------------------------------------------------------
+
+👨‍💻 Author
 
 Rajat Bhakte
-
----
-
-⭐ If you like this project, give it a star 🌟

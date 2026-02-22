@@ -1964,3 +1964,125 @@ body.dark .timeline-content p {
   color: #e5e7eb !important;
   opacity: 1 !important;
 }
+
+/* =============================== */
+/* 📱 RESPONSIVE LAYOUT */
+/* =============================== */
+
+@media (max-width: 900px) {
+
+  .app {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+  }
+
+  .sidebar nav {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .sidebar nav button {
+    flex: 1;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .main {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .topbar {
+    padding: 10px 14px;
+  }
+
+  .topbar-content {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .search-box {
+    flex: 1;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .theme-toggle {
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .content {
+    padding: 18px 14px;
+  }
+
+  .content h1 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .companies-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filters select,
+  .filters button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .company-title {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .profile-card {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-card {
+    padding: 16px;
+  }
+
+  .details-page h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .timeline {
+    padding-left: 14px;
+  }
+
+  .timeline-content {
+    font-size: 13px;
+  }
+}
